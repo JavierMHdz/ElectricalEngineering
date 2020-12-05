@@ -1,0 +1,13 @@
+#ifndef LOGICSIM_H
+#define LOGICSIM_H
+
+using namespace std;
+
+class LogicSim{
+   public:
+   LogicSim();
+   ~LogicSim();
+   int read();
+};
+
+#endif
