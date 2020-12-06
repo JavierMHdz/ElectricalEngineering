@@ -1,0 +1,13 @@
+X1 = [-8 8];
+Y1 = [7.37037037 24.3417722];
+plot(X1,Y1);
+grid on;
+hold on;
+X2 = [-8 8];
+Y2 = [-16.968992 3.54237288];
+plot(X2,Y2);
+axis([-10 10 -20 30]);
+title('Question 9: Impact of Disappointment');
+xlabel('Obtained Outcome');
+ylabel('Emotional Response');
+hold off;
