@@ -1,0 +1,556 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>EE301 Lab2</title><meta name="generator" content="MATLAB 8.2"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-02-02"><meta name="DC.source" content="EE301_Lab2.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>EE301 Lab2</h1><p>Javier Macossay-Hernandez, USC ID 9907093913, Lab Section 30813</p><pre class="codeinput"><span class="comment">%Q1. Exercising graphical convolution</span>
+
+figure(1)
+
+x=inline(<span class="string">'1.5*sin(pi*t).*(t&gt;=0 &amp; t&lt;1)'</span>);
+h=inline(<span class="string">'1.5*(t&gt;=0 &amp; t&lt;1.5)-(t&gt;=2 &amp; t&lt;2.5)'</span>);
+dtau = 0.005;
+tau = -1:dtau:4;
+ti=0;
+tvec = -1:0.1:4;
+
+<span class="comment">% Pre-allocate memory</span>
+y=NaN*zeros(1,length(tvec));
+
+<span class="keyword">for</span> t=tvec
+    <span class="comment">%Time index</span>
+    ti=ti+1;
+    xh=x(t-tau).*h(tau);
+    lxh=length(xh);
+
+    <span class="comment">%Trapezoidal approximation of integral</span>
+    y(ti)=sum(xh.*dtau);
+
+    subplot(2,1,1),plot(tau,h(tau),<span class="string">'r-'</span>,tau,x(t-tau),<span class="string">'b--'</span>,t,0,<span class="string">'ok'</span>);
+
+    axis([tau(1) tau(end) -2.0 2.5]);
+
+    <span class="comment">%Patch command is used to create the gray-shaded area of convolution</span>
+    patch([tau(1:end-1); tau(1:end-1); tau(2:end); tau(2:end)],[zeros(1,lxh-1); xh(1:end-1); xh(2:end); zeros(1,lxh-1)], [0.8 0.8 0.8], <span class="string">'edgecolor'</span>,<span class="string">'none'</span>);
+
+    xlabel(<span class="string">'\tau'</span>);
+    legend(<span class="string">'h(\tau)'</span>, <span class="string">'x(t-\tau)'</span>,<span class="string">'t'</span>,<span class="string">'h(\tau)x(t-\tau)'</span>,3);
+
+    c = get(gca, <span class="string">'children'</span>);
+    set(gca,<span class="string">'children'</span>, [c(2);c(3);c(4);c(1)]);
+
+    subplot(2,1,2), plot(tvec,y,<span class="string">'k'</span>,tvec(ti),y(ti),<span class="string">'ok'</span>);
+    xlabel(<span class="string">'t'</span>);
+    ylabel(<span class="string">'y(t)'</span>);
+    title(<span class="string">'y(t) = \int h(\tau)x(t-\tau) d\tau'</span>);
+    axis([tau(1) tau(end) -1.0 2.0]);
+    grid;
+
+    drawnow;
+
+<span class="keyword">end</span>
+
+<span class="comment">%Q4. Obtain ys(t):</span>
+figure(2)
+
+x=inline(<span class="string">'t&gt;=0'</span>);
+<span class="comment">%R and C are equal to 1</span>
+h=inline(<span class="string">'exp(-t).*(t&gt;=0)'</span>);
+dtau = 0.005;
+tau = -1:dtau:4;
+ti=0;
+tvec = -1:0.1:4;
+
+<span class="comment">% Pre-allocate memory</span>
+y=NaN*zeros(1,length(tvec));
+
+<span class="keyword">for</span> t=tvec
+    <span class="comment">%Time index</span>
+    ti=ti+1;
+    xh=x(t-tau).*h(tau);
+    lxh=length(xh);
+
+    <span class="comment">%Trapezoidal approximation of integral</span>
+    y(ti)=sum(xh.*dtau);
+
+    subplot(2,1,1),plot(tau,h(tau),<span class="string">'r-'</span>,tau,x(t-tau),<span class="string">'b--'</span>,t,0,<span class="string">'ok'</span>);
+
+    axis([tau(1) tau(end) -2.0 2.5]);
+
+    <span class="comment">%Patch command is used to create the gray-shaded area of convolution</span>
+    patch([tau(1:end-1); tau(1:end-1); tau(2:end); tau(2:end)],[zeros(1,lxh-1); xh(1:end-1); xh(2:end); zeros(1,lxh-1)], [0.8 0.8 0.8], <span class="string">'edgecolor'</span>,<span class="string">'none'</span>);
+
+    xlabel(<span class="string">'\tau'</span>);
+    legend(<span class="string">'h(\tau)'</span>, <span class="string">'x(t-\tau)'</span>,<span class="string">'t'</span>,<span class="string">'h(\tau)x(t-\tau)'</span>,3);
+
+    c = get(gca, <span class="string">'children'</span>);
+    set(gca,<span class="string">'children'</span>, [c(2);c(3);c(4);c(1)]);
+
+    subplot(2,1,2), plot(tvec,y,<span class="string">'k'</span>,tvec(ti),y(ti),<span class="string">'ok'</span>);
+    xlabel(<span class="string">'t'</span>);
+    ylabel(<span class="string">'y(t)'</span>);
+    title(<span class="string">'y(t) = \int h(\tau)x(t-\tau) d\tau'</span>);
+    axis([tau(1) tau(end) -1.0 2.0]);
+    grid;
+
+    drawnow;
+
+<span class="keyword">end</span>
+
+<span class="comment">%Q5. Obtain h(t):</span>
+figure(3)
+plot(tvec(2:end),diff(y)/dtau);
+xlabel(<span class="string">'t'</span>);
+ylabel(<span class="string">'h(t)'</span>);
+title(<span class="string">'Impulse Response [h(t)] vs Time (t)'</span>);
+
+<span class="comment">%Q6. Obtain pulse response part 1:</span>
+
+<span class="comment">%First plot</span>
+figure(4)
+
+x=inline(<span class="string">'(t&gt;=0 &amp; t&lt;=0.1)'</span>);
+h=inline(<span class="string">'exp(-t).*(t&gt;=0)'</span>);
+dtau = 0.005;
+tau = -1:dtau:4;
+ti=0;
+tvec = -1:0.1:4;
+
+<span class="comment">% Pre-allocate memory</span>
+y=NaN*zeros(1,length(tvec));
+
+<span class="keyword">for</span> t=tvec
+    <span class="comment">%Time index</span>
+    ti=ti+1;
+    xh=x(t-tau).*h(tau);
+    lxh=length(xh);
+
+    <span class="comment">%Trapezoidal approximation of integral</span>
+    y(ti)=sum(xh.*dtau);
+
+    subplot(2,1,1),plot(tau,h(tau),<span class="string">'r-'</span>,tau,x(t-tau),<span class="string">'b--'</span>,t,0,<span class="string">'ok'</span>);
+
+    axis([tau(1) tau(end) -2.0 2.5]);
+
+    <span class="comment">%Patch command is used to create the gray-shaded area of convolution</span>
+    patch([tau(1:end-1); tau(1:end-1); tau(2:end); tau(2:end)],[zeros(1,lxh-1); xh(1:end-1); xh(2:end); zeros(1,lxh-1)], [0.8 0.8 0.8], <span class="string">'edgecolor'</span>,<span class="string">'none'</span>);
+
+    xlabel(<span class="string">'\tau'</span>);
+    legend(<span class="string">'h(\tau)'</span>, <span class="string">'x(t-\tau)'</span>,<span class="string">'t'</span>,<span class="string">'h(\tau)x(t-\tau)'</span>,3);
+
+    c = get(gca, <span class="string">'children'</span>);
+    set(gca,<span class="string">'children'</span>, [c(2);c(3);c(4);c(1)]);
+
+    subplot(2,1,2), plot(tvec,y,<span class="string">'k'</span>,tvec(ti),y(ti),<span class="string">'ok'</span>);
+    xlabel(<span class="string">'t'</span>);
+    ylabel(<span class="string">'y(t)'</span>);
+    title(<span class="string">'y(t) = \int h(\tau)x(t-\tau) d\tau'</span>);
+    axis([tau(1) tau(end) -1.0 2.0]);
+    grid;
+
+    drawnow;
+
+<span class="keyword">end</span>
+
+<span class="comment">%Second plot</span>
+figure(5)
+
+x=inline(<span class="string">'1/0.01*(t&gt;=0 &amp; t&lt;=0.1)'</span>);
+h=inline(<span class="string">'exp(-t).*(t&gt;=0)'</span>);
+dtau = 0.005;
+tau = -1:dtau:4;
+ti=0;
+tvec = -1:0.1:4;
+
+<span class="comment">% Pre-allocate memory</span>
+y=NaN*zeros(1,length(tvec));
+
+<span class="keyword">for</span> t=tvec
+    <span class="comment">%Time index</span>
+    ti=ti+1;
+    xh=x(t-tau).*h(tau);
+    lxh=length(xh);
+
+    <span class="comment">%Trapezoidal approximation of integral</span>
+    y(ti)=sum(xh.*dtau);
+
+    subplot(2,1,1),plot(tau,h(tau),<span class="string">'r-'</span>,tau,x(t-tau),<span class="string">'b--'</span>,t,0,<span class="string">'ok'</span>);
+
+    axis([tau(1) tau(end) -2.0 2.5]);
+
+    <span class="comment">%Patch command is used to create the gray-shaded area of convolution</span>
+    patch([tau(1:end-1); tau(1:end-1); tau(2:end); tau(2:end)],[zeros(1,lxh-1); xh(1:end-1); xh(2:end); zeros(1,lxh-1)], [0.8 0.8 0.8], <span class="string">'edgecolor'</span>,<span class="string">'none'</span>);
+
+    xlabel(<span class="string">'\tau'</span>);
+    legend(<span class="string">'h(\tau)'</span>, <span class="string">'x(t-\tau)'</span>,<span class="string">'t'</span>,<span class="string">'h(\tau)x(t-\tau)'</span>,3);
+
+    c = get(gca, <span class="string">'children'</span>);
+    set(gca,<span class="string">'children'</span>, [c(2);c(3);c(4);c(1)]);
+
+    subplot(2,1,2), plot(tvec,y,<span class="string">'k'</span>,tvec(ti),y(ti),<span class="string">'ok'</span>);
+    xlabel(<span class="string">'t'</span>);
+    ylabel(<span class="string">'y(t)'</span>);
+    title(<span class="string">'y(t) = \int h(\tau)x(t-\tau) d\tau'</span>);
+    axis([tau(1) tau(end) -1.0 2.0]);
+    grid;
+
+    drawnow;
+
+<span class="keyword">end</span>
+
+<span class="comment">%Third plot</span>
+figure(6)
+
+x=inline(<span class="string">'1/0.001*(t&gt;=0 &amp; t&lt;=0.1)'</span>);
+h=inline(<span class="string">'exp(-t).*(t&gt;=0)'</span>);
+dtau = 0.005;
+tau = -1:dtau:4;
+ti=0;
+tvec = -1:0.1:4;
+
+<span class="comment">% Pre-allocate memory</span>
+y=NaN*zeros(1,length(tvec));
+
+<span class="keyword">for</span> t=tvec
+    <span class="comment">%Time index</span>
+    ti=ti+1;
+    xh=x(t-tau).*h(tau);
+    lxh=length(xh);
+
+    <span class="comment">%Trapezoidal approximation of integral</span>
+    y(ti)=sum(xh.*dtau);
+
+    subplot(2,1,1),plot(tau,h(tau),<span class="string">'r-'</span>,tau,x(t-tau),<span class="string">'b--'</span>,t,0,<span class="string">'ok'</span>);
+
+    axis([tau(1) tau(end) -2.0 2.5]);
+
+    <span class="comment">%Patch command is used to create the gray-shaded area of convolution</span>
+    patch([tau(1:end-1); tau(1:end-1); tau(2:end); tau(2:end)],[zeros(1,lxh-1); xh(1:end-1); xh(2:end); zeros(1,lxh-1)], [0.8 0.8 0.8], <span class="string">'edgecolor'</span>,<span class="string">'none'</span>);
+
+    xlabel(<span class="string">'\tau'</span>);
+    legend(<span class="string">'h(\tau)'</span>, <span class="string">'x(t-\tau)'</span>,<span class="string">'t'</span>,<span class="string">'h(\tau)x(t-\tau)'</span>,3);
+
+    c = get(gca, <span class="string">'children'</span>);
+    set(gca,<span class="string">'children'</span>, [c(2);c(3);c(4);c(1)]);
+
+    subplot(2,1,2), plot(tvec,y,<span class="string">'k'</span>,tvec(ti),y(ti),<span class="string">'ok'</span>);
+    xlabel(<span class="string">'t'</span>);
+    ylabel(<span class="string">'y(t)'</span>);
+    title(<span class="string">'y(t) = \int h(\tau)x(t-\tau) d\tau'</span>);
+    axis([tau(1) tau(end) -1.0 2.0]);
+    grid;
+
+    drawnow;
+
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="EE301_Lab2_01.png" alt=""> <img vspace="5" hspace="5" src="EE301_Lab2_02.png" alt=""> <img vspace="5" hspace="5" src="EE301_Lab2_03.png" alt=""> <img vspace="5" hspace="5" src="EE301_Lab2_04.png" alt=""> <img vspace="5" hspace="5" src="EE301_Lab2_05.png" alt=""> <img vspace="5" hspace="5" src="EE301_Lab2_06.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2013b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% EE301 Lab2
+% Javier Macossay-Hernandez,
+% USC ID 9907093913,
+% Lab Section 30813
+
+%Q1. Exercising graphical convolution
+
+figure(1)
+
+x=inline('1.5*sin(pi*t).*(t>=0 & t<1)');
+h=inline('1.5*(t>=0 & t<1.5)-(t>=2 & t<2.5)');
+dtau = 0.005;
+tau = -1:dtau:4;
+ti=0;
+tvec = -1:0.1:4;
+
+% Pre-allocate memory
+y=NaN*zeros(1,length(tvec));
+
+for t=tvec
+    %Time index
+    ti=ti+1;
+    xh=x(t-tau).*h(tau);
+    lxh=length(xh);
+    
+    %Trapezoidal approximation of integral
+    y(ti)=sum(xh.*dtau);
+    
+    subplot(2,1,1),plot(tau,h(tau),'r-',tau,x(t-tau),'bREPLACE_WITH_DASH_DASH',t,0,'ok');
+    
+    axis([tau(1) tau(end) -2.0 2.5]);
+    
+    %Patch command is used to create the gray-shaded area of convolution
+    patch([tau(1:end-1); tau(1:end-1); tau(2:end); tau(2:end)],[zeros(1,lxh-1); xh(1:end-1); xh(2:end); zeros(1,lxh-1)], [0.8 0.8 0.8], 'edgecolor','none');
+    
+    xlabel('\tau');
+    legend('h(\tau)', 'x(t-\tau)','t','h(\tau)x(t-\tau)',3);
+    
+    c = get(gca, 'children');
+    set(gca,'children', [c(2);c(3);c(4);c(1)]);
+    
+    subplot(2,1,2), plot(tvec,y,'k',tvec(ti),y(ti),'ok');
+    xlabel('t');
+    ylabel('y(t)');
+    title('y(t) = \int h(\tau)x(t-\tau) d\tau');
+    axis([tau(1) tau(end) -1.0 2.0]);
+    grid;
+
+    drawnow;
+    
+end
+
+%Q4. Obtain ys(t):
+figure(2)
+
+x=inline('t>=0');
+%R and C are equal to 1
+h=inline('exp(-t).*(t>=0)');
+dtau = 0.005;
+tau = -1:dtau:4;
+ti=0;
+tvec = -1:0.1:4;
+
+% Pre-allocate memory
+y=NaN*zeros(1,length(tvec));
+
+for t=tvec
+    %Time index
+    ti=ti+1;
+    xh=x(t-tau).*h(tau);
+    lxh=length(xh);
+    
+    %Trapezoidal approximation of integral
+    y(ti)=sum(xh.*dtau);
+    
+    subplot(2,1,1),plot(tau,h(tau),'r-',tau,x(t-tau),'bREPLACE_WITH_DASH_DASH',t,0,'ok');
+    
+    axis([tau(1) tau(end) -2.0 2.5]);
+    
+    %Patch command is used to create the gray-shaded area of convolution
+    patch([tau(1:end-1); tau(1:end-1); tau(2:end); tau(2:end)],[zeros(1,lxh-1); xh(1:end-1); xh(2:end); zeros(1,lxh-1)], [0.8 0.8 0.8], 'edgecolor','none');
+    
+    xlabel('\tau');
+    legend('h(\tau)', 'x(t-\tau)','t','h(\tau)x(t-\tau)',3);
+    
+    c = get(gca, 'children');
+    set(gca,'children', [c(2);c(3);c(4);c(1)]);
+    
+    subplot(2,1,2), plot(tvec,y,'k',tvec(ti),y(ti),'ok');
+    xlabel('t');
+    ylabel('y(t)');
+    title('y(t) = \int h(\tau)x(t-\tau) d\tau');
+    axis([tau(1) tau(end) -1.0 2.0]);
+    grid;
+
+    drawnow;
+    
+end
+
+%Q5. Obtain h(t):
+figure(3)
+plot(tvec(2:end),diff(y)/dtau);
+xlabel('t');
+ylabel('h(t)');
+title('Impulse Response [h(t)] vs Time (t)');
+
+%Q6. Obtain pulse response part 1:
+
+%First plot
+figure(4)
+
+x=inline('(t>=0 & t<=0.1)');
+h=inline('exp(-t).*(t>=0)');
+dtau = 0.005;
+tau = -1:dtau:4;
+ti=0;
+tvec = -1:0.1:4;
+
+% Pre-allocate memory
+y=NaN*zeros(1,length(tvec));
+
+for t=tvec
+    %Time index
+    ti=ti+1;
+    xh=x(t-tau).*h(tau);
+    lxh=length(xh);
+    
+    %Trapezoidal approximation of integral
+    y(ti)=sum(xh.*dtau);
+    
+    subplot(2,1,1),plot(tau,h(tau),'r-',tau,x(t-tau),'bREPLACE_WITH_DASH_DASH',t,0,'ok');
+    
+    axis([tau(1) tau(end) -2.0 2.5]);
+    
+    %Patch command is used to create the gray-shaded area of convolution
+    patch([tau(1:end-1); tau(1:end-1); tau(2:end); tau(2:end)],[zeros(1,lxh-1); xh(1:end-1); xh(2:end); zeros(1,lxh-1)], [0.8 0.8 0.8], 'edgecolor','none');
+    
+    xlabel('\tau');
+    legend('h(\tau)', 'x(t-\tau)','t','h(\tau)x(t-\tau)',3);
+    
+    c = get(gca, 'children');
+    set(gca,'children', [c(2);c(3);c(4);c(1)]);
+    
+    subplot(2,1,2), plot(tvec,y,'k',tvec(ti),y(ti),'ok');
+    xlabel('t');
+    ylabel('y(t)');
+    title('y(t) = \int h(\tau)x(t-\tau) d\tau');
+    axis([tau(1) tau(end) -1.0 2.0]);
+    grid;
+
+    drawnow;
+    
+end
+
+%Second plot
+figure(5)
+
+x=inline('1/0.01*(t>=0 & t<=0.1)');
+h=inline('exp(-t).*(t>=0)');
+dtau = 0.005;
+tau = -1:dtau:4;
+ti=0;
+tvec = -1:0.1:4;
+
+% Pre-allocate memory
+y=NaN*zeros(1,length(tvec));
+
+for t=tvec
+    %Time index
+    ti=ti+1;
+    xh=x(t-tau).*h(tau);
+    lxh=length(xh);
+    
+    %Trapezoidal approximation of integral
+    y(ti)=sum(xh.*dtau);
+    
+    subplot(2,1,1),plot(tau,h(tau),'r-',tau,x(t-tau),'bREPLACE_WITH_DASH_DASH',t,0,'ok');
+    
+    axis([tau(1) tau(end) -2.0 2.5]);
+    
+    %Patch command is used to create the gray-shaded area of convolution
+    patch([tau(1:end-1); tau(1:end-1); tau(2:end); tau(2:end)],[zeros(1,lxh-1); xh(1:end-1); xh(2:end); zeros(1,lxh-1)], [0.8 0.8 0.8], 'edgecolor','none');
+    
+    xlabel('\tau');
+    legend('h(\tau)', 'x(t-\tau)','t','h(\tau)x(t-\tau)',3);
+    
+    c = get(gca, 'children');
+    set(gca,'children', [c(2);c(3);c(4);c(1)]);
+    
+    subplot(2,1,2), plot(tvec,y,'k',tvec(ti),y(ti),'ok');
+    xlabel('t');
+    ylabel('y(t)');
+    title('y(t) = \int h(\tau)x(t-\tau) d\tau');
+    axis([tau(1) tau(end) -1.0 2.0]);
+    grid;
+
+    drawnow;
+    
+end
+
+%Third plot
+figure(6)
+
+x=inline('1/0.001*(t>=0 & t<=0.1)');
+h=inline('exp(-t).*(t>=0)');
+dtau = 0.005;
+tau = -1:dtau:4;
+ti=0;
+tvec = -1:0.1:4;
+
+% Pre-allocate memory
+y=NaN*zeros(1,length(tvec));
+
+for t=tvec
+    %Time index
+    ti=ti+1;
+    xh=x(t-tau).*h(tau);
+    lxh=length(xh);
+    
+    %Trapezoidal approximation of integral
+    y(ti)=sum(xh.*dtau);
+    
+    subplot(2,1,1),plot(tau,h(tau),'r-',tau,x(t-tau),'bREPLACE_WITH_DASH_DASH',t,0,'ok');
+    
+    axis([tau(1) tau(end) -2.0 2.5]);
+    
+    %Patch command is used to create the gray-shaded area of convolution
+    patch([tau(1:end-1); tau(1:end-1); tau(2:end); tau(2:end)],[zeros(1,lxh-1); xh(1:end-1); xh(2:end); zeros(1,lxh-1)], [0.8 0.8 0.8], 'edgecolor','none');
+    
+    xlabel('\tau');
+    legend('h(\tau)', 'x(t-\tau)','t','h(\tau)x(t-\tau)',3);
+    
+    c = get(gca, 'children');
+    set(gca,'children', [c(2);c(3);c(4);c(1)]);
+    
+    subplot(2,1,2), plot(tvec,y,'k',tvec(ti),y(ti),'ok');
+    xlabel('t');
+    ylabel('y(t)');
+    title('y(t) = \int h(\tau)x(t-\tau) d\tau');
+    axis([tau(1) tau(end) -1.0 2.0]);
+    grid;
+
+    drawnow;
+    
+end
+##### SOURCE END #####
+--></body></html>

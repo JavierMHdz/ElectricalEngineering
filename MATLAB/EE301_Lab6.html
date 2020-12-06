@@ -1,0 +1,339 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>EE301 Lab6</title><meta name="generator" content="MATLAB 8.2"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-03-11"><meta name="DC.source" content="EE301_Lab6.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>EE301 Lab6</h1><p>Javier Macossay-Hernandez, USC ID 9907093913, Lab Section 30813</p><pre class="codeinput">clc;
+clear <span class="string">all</span>;
+close <span class="string">all</span>;
+
+<span class="comment">%%Question 1</span>
+<span class="comment">%sinsum(1);</span>
+
+<span class="comment">%%Question 2</span>
+kk = -20:20;
+CC = -(2./(pi*kk)).^2;
+CC(1:2:length(kk)) = 0;
+
+T = 0.1;
+periods = 5;
+
+[ss,tt] = fourier_synthesis(CC,T,periods);
+<span class="comment">%This figure corresponds to the Stem Plot</span>
+figure
+stem(kk,CC)
+title(<span class="string">'Fourier Coefficients Stem Plot'</span>);
+
+<span class="comment">%This figure corresponds to the triangle wave</span>
+figure
+plot(tt,ss);
+title(<span class="string">'Fourier Synthesis Plot'</span>);
+
+<span class="comment">%%Question 3</span>
+<span class="comment">%load data from lab6_data.mat</span>
+load(<span class="string">'lab6_data.mat'</span>);
+
+<span class="comment">%part a</span>
+figure
+plot(step_time,step_signal)
+title(<span class="string">'Step signal from Question 3'</span>);
+
+<span class="comment">%Get one period</span>
+t0 = step_time(1:length(step_time)/5);
+x = step_signal(1:length(step_signal)/5);
+
+figure
+plot(t0,x);
+title(<span class="string">'Plot of one period of the signal'</span>);
+
+dt = min(diff(t0));
+T = (max(t0)-min(t0));
+MS = dt*sum(x.^2)/T;
+disp(<span class="string">'The mean square value is the following:'</span>)
+disp(MS)
+
+<span class="comment">%part b</span>
+[CC50,ww50] = fourier_analysis(x,T,50);
+
+figure
+subplot(2,1,1);
+stem(ww50,abs(CC50));
+title(<span class="string">'Magnitude'</span>);
+subplot(2,1,2);
+stem(ww50,angle(CC50));
+title(<span class="string">'Phase'</span>);
+
+<span class="comment">%part c</span>
+<span class="comment">%The vectors I will create will have coefficients with values that range</span>
+<span class="comment">%from N=25 to N=200. In the case of N=25, it creates 51 coefficients</span>
+periods = 1;
+
+[CC25, ww25] = fourier_analysis(x,T,25);
+[ss25,tt25] = fourier_synthesis(CC25, T, periods, 16384);
+
+[ss50,tt50] = fourier_synthesis(CC50,T,periods, 16384);
+
+[CC100,ww100] = fourier_analysis(x,max(t0)-min(t0),100);
+[ss100,tt100] = fourier_synthesis(CC100,1,periods,16384);
+
+[CC200,ww200] = fourier_analysis(x,max(t0)-min(t0),200);
+[ss200,tt200] = fourier_synthesis(CC200,1,periods,16384);
+
+figure
+subplot(2,2,1);
+plot(tt25,ss25);
+title(<span class="string">'25 coefficients'</span>);
+xlim([0 1]);
+
+subplot(2,2,2);
+plot(tt50,ss50);
+title(<span class="string">'50 coefficients'</span>);
+xlim([0 1]);
+
+subplot(2,2,3);
+plot(tt100,ss100);
+title(<span class="string">'100 coefficients'</span>);
+
+subplot(2,2,4);
+plot(tt200,ss200);
+title(<span class="string">'200 coefficients'</span>);
+
+MSE25 = dt*sum((ss25-x).^2)/(max(tt)-min(tt));
+MSE50 = dt*sum((ss50-x).^2)/(max(tt)-min(tt));
+MSE100 = dt*sum((ss100-x).^2)/(max(tt)-min(tt));
+MSE200 = dt*sum((ss200-x).^2)/(max(tt)-min(tt));
+
+disp(<span class="string">'The mean squared error with N = 25 is'</span>)
+disp(MSE25)
+
+disp(<span class="string">'The mean squared error with N = 50 is'</span>)
+disp(MSE50)
+
+disp(<span class="string">'The mean squared error with N = 100 is'</span>)
+disp(MSE100)
+
+disp(<span class="string">'The mean squared error with N = 200 is'</span>)
+disp(MSE200)
+
+Ecc25 = sum(abs(CC25).^2);
+Ecc50 = sum(abs(CC50).^2);
+Ecc100 = sum(abs(CC100).^2);
+Ecc200 = sum(abs(CC200).^2);
+
+<span class="comment">%MSE = (MStrue - Energy)*2</span>
+
+<span class="comment">%These are equivalent to half of the MSEs</span>
+error25 = MS - Ecc25;
+error50 = MS - Ecc50;
+error100 = MS - Ecc100;
+error200 = MS - Ecc200;
+</pre><pre class="codeoutput">The mean square value is the following:
+    0.3750
+
+The mean squared error with N = 25 is
+    0.0074
+
+The mean squared error with N = 50 is
+    0.0039
+
+The mean squared error with N = 100 is
+    0.0020
+
+The mean squared error with N = 200 is
+    0.0010
+
+</pre><img vspace="5" hspace="5" src="EE301_Lab6_01.png" alt=""> <img vspace="5" hspace="5" src="EE301_Lab6_02.png" alt=""> <img vspace="5" hspace="5" src="EE301_Lab6_03.png" alt=""> <img vspace="5" hspace="5" src="EE301_Lab6_04.png" alt=""> <img vspace="5" hspace="5" src="EE301_Lab6_05.png" alt=""> <img vspace="5" hspace="5" src="EE301_Lab6_06.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2013b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% EE301 Lab6
+% Javier Macossay-Hernandez,
+% USC ID 9907093913,
+% Lab Section 30813
+
+clc;
+clear all;
+close all;
+
+%%Question 1
+%sinsum(1);
+
+%%Question 2
+kk = -20:20;
+CC = -(2./(pi*kk)).^2;
+CC(1:2:length(kk)) = 0;
+
+T = 0.1;
+periods = 5;
+
+[ss,tt] = fourier_synthesis(CC,T,periods);
+%This figure corresponds to the Stem Plot
+figure
+stem(kk,CC)
+title('Fourier Coefficients Stem Plot');
+
+%This figure corresponds to the triangle wave
+figure
+plot(tt,ss);
+title('Fourier Synthesis Plot');
+
+%%Question 3
+%load data from lab6_data.mat
+load('lab6_data.mat');
+
+%part a
+figure
+plot(step_time,step_signal)
+title('Step signal from Question 3');
+
+%Get one period
+t0 = step_time(1:length(step_time)/5);
+x = step_signal(1:length(step_signal)/5);
+
+figure
+plot(t0,x);
+title('Plot of one period of the signal');
+
+dt = min(diff(t0));
+T = (max(t0)-min(t0));
+MS = dt*sum(x.^2)/T;
+disp('The mean square value is the following:')
+disp(MS)
+
+%part b
+[CC50,ww50] = fourier_analysis(x,T,50);
+
+figure
+subplot(2,1,1);
+stem(ww50,abs(CC50));
+title('Magnitude');
+subplot(2,1,2);
+stem(ww50,angle(CC50));
+title('Phase');
+
+%part c
+%The vectors I will create will have coefficients with values that range
+%from N=25 to N=200. In the case of N=25, it creates 51 coefficients
+periods = 1;
+
+[CC25, ww25] = fourier_analysis(x,T,25);
+[ss25,tt25] = fourier_synthesis(CC25, T, periods, 16384);
+
+[ss50,tt50] = fourier_synthesis(CC50,T,periods, 16384);
+
+[CC100,ww100] = fourier_analysis(x,max(t0)-min(t0),100);
+[ss100,tt100] = fourier_synthesis(CC100,1,periods,16384);
+
+[CC200,ww200] = fourier_analysis(x,max(t0)-min(t0),200);
+[ss200,tt200] = fourier_synthesis(CC200,1,periods,16384);
+
+figure
+subplot(2,2,1);
+plot(tt25,ss25);
+title('25 coefficients');
+xlim([0 1]);
+
+subplot(2,2,2);
+plot(tt50,ss50);
+title('50 coefficients');
+xlim([0 1]);
+
+subplot(2,2,3);
+plot(tt100,ss100);
+title('100 coefficients');
+
+subplot(2,2,4);
+plot(tt200,ss200);
+title('200 coefficients');
+
+MSE25 = dt*sum((ss25-x).^2)/(max(tt)-min(tt));
+MSE50 = dt*sum((ss50-x).^2)/(max(tt)-min(tt));
+MSE100 = dt*sum((ss100-x).^2)/(max(tt)-min(tt));
+MSE200 = dt*sum((ss200-x).^2)/(max(tt)-min(tt));
+
+disp('The mean squared error with N = 25 is')
+disp(MSE25)
+
+disp('The mean squared error with N = 50 is')
+disp(MSE50)
+
+disp('The mean squared error with N = 100 is')
+disp(MSE100)
+
+disp('The mean squared error with N = 200 is')
+disp(MSE200)
+
+Ecc25 = sum(abs(CC25).^2);
+Ecc50 = sum(abs(CC50).^2);
+Ecc100 = sum(abs(CC100).^2);
+Ecc200 = sum(abs(CC200).^2);
+
+%MSE = (MStrue - Energy)*2
+
+%These are equivalent to half of the MSEs
+error25 = MS - Ecc25;
+error50 = MS - Ecc50;
+error100 = MS - Ecc100;
+error200 = MS - Ecc200;
+##### SOURCE END #####
+--></body></html>

@@ -1,0 +1,392 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>EE301 Lab10</title><meta name="generator" content="MATLAB 8.2"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-04-21"><meta name="DC.source" content="EE301_Lab10.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>EE301 Lab10</h1><p>Javier Macossay-Hernandez, USC ID 9907093913, Lab Section 30813</p><pre class="codeinput">clc;
+clear <span class="string">all</span>;
+close <span class="string">all</span>;
+
+<span class="comment">%%Question 1</span>
+<span class="keyword">for</span> imnum = 1:3
+fname = sprintf(<span class="string">'0%d.gif'</span>,imnum);
+im = imread(fname,<span class="string">'gif'</span>);
+figure
+imshow(im);
+title(num2str(imnum));
+pause(0.2);
+
+<span class="comment">%%Question 2</span>
+
+figure
+<span class="comment">% Compute the Fourier</span>
+ftx = fft2(im);
+subplot(131);
+<span class="comment">% Image</span>
+imshow(im,[0 256]);
+title(<span class="string">'Image'</span>);
+subplot(132);
+<span class="comment">% Fourier Log-Magnitude</span>
+imshow(log(fftshift(abs(ftx))),[-4 10]);
+title(<span class="string">'Fourier log magnitude'</span>);
+subplot(133);
+<span class="comment">% Fourier phase</span>
+imshow(angle(ftx),[-pi pi]);
+title(<span class="string">'Fourier phase'</span>);
+<span class="keyword">end</span>
+
+<span class="comment">%Do you see any common trends among all (or most) images?</span>
+<span class="comment">%A commont trend among the images is the area of the center because it has</span>
+<span class="comment">%more intesity. Therefore, the image locks brighter.</span>
+
+<span class="comment">%Do you see any unique features in the Fourier domain? Do they relate to</span>
+<span class="comment">%features in the image domain?</span>
+<span class="comment">%In the Fourier domain, it can be seen the information in the intensity.</span>
+<span class="comment">%In the lower frequency, it can be perceived more energy.</span>
+<span class="comment">%Unique features in the Fourier domain can be seen, but it is not easy to</span>
+<span class="comment">%interpret them to relate them in the image domain.</span>
+
+<span class="comment">%%Question 3</span>
+fname = sprintf(<span class="string">'01.gif'</span>,imnum);
+im1 = imread(fname,<span class="string">'gif'</span>);
+
+
+fname = sprintf(<span class="string">'02.gif'</span>,imnum);
+im2 = imread(fname,<span class="string">'gif'</span>);
+
+<span class="comment">% compute the Fourier</span>
+ft1= fft2(im1);
+<span class="comment">% compute the Fourier</span>
+ft2= fft2(im2);
+
+mag01=abs(ft1);
+pha02=angle(ft2);
+total=mag01.*exp(j*pha02);
+new=ifft2(total);
+figure
+<span class="comment">% image</span>
+imshow(abs(new),[0 256]);
+
+<span class="comment">%From this process, can you infer the type of information contained in the</span>
+<span class="comment">%magnitude versus phase of the Fourier transform?</span>
+<span class="comment">%In this case, the information contained in the magnitude is less relevant</span>
+<span class="comment">%than the information contained in the phase of the Fourier transform.</span>
+
+<span class="comment">%%Question 4</span>
+fname = sprintf(<span class="string">'01.gif'</span>,imnum);
+im = imread(fname,<span class="string">'gif'</span>);
+
+m = [2 1 0 0 0;
+ 1 2 1 0 0;
+ 0 1 2 1 0;
+ 0 0 1 2 1;
+ 0 0 0 1 2];
+figure
+<span class="comment">% normalized matrix</span>
+m = m/sum(m(:));
+im4 = conv2(double(im),m,<span class="string">'same'</span>);
+subplot(121);
+<span class="comment">% show original image</span>
+imshow(im,[0 256]);
+subplot(122);
+<span class="comment">% show the one after convolution</span>
+imshow(im4,[0 256]);
+
+<span class="comment">%from left to right</span>
+fname = sprintf(<span class="string">'01.gif'</span>,imnum);
+im = imread(fname,<span class="string">'gif'</span>);
+
+m = [0 0 0 0 0;
+ 0 0 0 0 0;
+ 5 5 2 5 5;
+ 0 0 0 0 0;
+ 0 0 0 0 0];
+figure
+<span class="comment">% normalized matrix</span>
+m = m/sum(m(:));
+im4 = conv2(double(im),m,<span class="string">'same'</span>);
+subplot(121);
+<span class="comment">% show original image</span>
+imshow(im,[0 256]);
+subplot(122);
+<span class="comment">% show the one after convolution</span>
+imshow(im4,[0 256]);
+
+<span class="comment">%from up to down</span>
+fname = sprintf(<span class="string">'01.gif'</span>,imnum);
+im = imread(fname,<span class="string">'gif'</span>);
+
+m = [0 0 5 0 0;
+ 0 0 5 0 0;
+ 0 0 2 0 0;
+ 0 0 5 0 0;
+ 0 0 5 0 0];
+figure
+<span class="comment">% normalized matrix</span>
+m = m/sum(m(:));
+im4 = conv2(double(im),m,<span class="string">'same'</span>);
+subplot(121);
+<span class="comment">% show original image</span>
+imshow(im,[0 256]);
+subplot(122);
+<span class="comment">% show the one after convolution</span>
+imshow(im4,[0 256]);
+
+<span class="comment">%%Open Ended Problems</span>
+<span class="comment">% Removing "Camera Shake" Blur</span>
+
+m = [2 1 0 0 0;
+     1 2 1 0 0;
+     0 1 2 1 0;
+     0 0 1 2 1;
+     0 0 0 1 2];
+
+<span class="comment">% Finding the determinant of the matrix m</span>
+l= det(m);
+l= l/sum(l(:));
+m = m/sum(m(:));
+
+im2 = conv2(double(im),m,<span class="string">'same'</span>);
+im3= conv2(double(im),l, <span class="string">'same'</span>);
+
+figure
+subplot(1,3,1)
+imshow(im,[0 256])
+title(<span class="string">'Image without changes'</span>)
+
+subplot(1,3,2)
+imshow(im2,[0 256])
+title(<span class="string">'Image with shake blur'</span>)
+
+subplot(1,3,3)
+imshow(im3, [0 256])
+title(<span class="string">'Image with shake blur removed'</span>)
+</pre><img vspace="5" hspace="5" src="EE301_Lab10_01.png" alt=""> <img vspace="5" hspace="5" src="EE301_Lab10_02.png" alt=""> <img vspace="5" hspace="5" src="EE301_Lab10_03.png" alt=""> <img vspace="5" hspace="5" src="EE301_Lab10_04.png" alt=""> <img vspace="5" hspace="5" src="EE301_Lab10_05.png" alt=""> <img vspace="5" hspace="5" src="EE301_Lab10_06.png" alt=""> <img vspace="5" hspace="5" src="EE301_Lab10_07.png" alt=""> <img vspace="5" hspace="5" src="EE301_Lab10_08.png" alt=""> <img vspace="5" hspace="5" src="EE301_Lab10_09.png" alt=""> <img vspace="5" hspace="5" src="EE301_Lab10_10.png" alt=""> <img vspace="5" hspace="5" src="EE301_Lab10_11.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2013b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% EE301 Lab10
+% Javier Macossay-Hernandez,
+% USC ID 9907093913,
+% Lab Section 30813
+
+clc;
+clear all;
+close all;
+
+%%Question 1
+for imnum = 1:3
+fname = sprintf('0%d.gif',imnum);
+im = imread(fname,'gif');
+figure
+imshow(im);
+title(num2str(imnum));
+pause(0.2);
+
+%%Question 2
+
+figure
+% Compute the Fourier
+ftx = fft2(im);
+subplot(131);
+% Image
+imshow(im,[0 256]);
+title('Image');
+subplot(132);
+% Fourier Log-Magnitude
+imshow(log(fftshift(abs(ftx))),[-4 10]);
+title('Fourier log magnitude');
+subplot(133);
+% Fourier phase
+imshow(angle(ftx),[-pi pi]); 
+title('Fourier phase');
+end
+
+%Do you see any common trends among all (or most) images?
+%A commont trend among the images is the area of the center because it has
+%more intesity. Therefore, the image locks brighter.
+
+%Do you see any unique features in the Fourier domain? Do they relate to
+%features in the image domain?
+%In the Fourier domain, it can be seen the information in the intensity.
+%In the lower frequency, it can be perceived more energy.
+%Unique features in the Fourier domain can be seen, but it is not easy to
+%interpret them to relate them in the image domain.
+
+%%Question 3
+fname = sprintf('01.gif',imnum);
+im1 = imread(fname,'gif');
+
+
+fname = sprintf('02.gif',imnum);
+im2 = imread(fname,'gif');
+
+% compute the Fourier
+ft1= fft2(im1);
+% compute the Fourier
+ft2= fft2(im2); 
+
+mag01=abs(ft1);
+pha02=angle(ft2);
+total=mag01.*exp(j*pha02);
+new=ifft2(total);
+figure
+% image
+imshow(abs(new),[0 256]);
+
+%From this process, can you infer the type of information contained in the
+%magnitude versus phase of the Fourier transform?
+%In this case, the information contained in the magnitude is less relevant
+%than the information contained in the phase of the Fourier transform.
+
+%%Question 4
+fname = sprintf('01.gif',imnum);
+im = imread(fname,'gif');
+
+m = [2 1 0 0 0;
+ 1 2 1 0 0;
+ 0 1 2 1 0;
+ 0 0 1 2 1;
+ 0 0 0 1 2];
+figure
+% normalized matrix
+m = m/sum(m(:));
+im4 = conv2(double(im),m,'same');
+subplot(121);
+% show original image
+imshow(im,[0 256]);
+subplot(122);
+% show the one after convolution
+imshow(im4,[0 256]);
+
+%from left to right
+fname = sprintf('01.gif',imnum);
+im = imread(fname,'gif');
+
+m = [0 0 0 0 0;
+ 0 0 0 0 0;
+ 5 5 2 5 5;
+ 0 0 0 0 0;
+ 0 0 0 0 0];
+figure
+% normalized matrix
+m = m/sum(m(:));
+im4 = conv2(double(im),m,'same');
+subplot(121);
+% show original image
+imshow(im,[0 256]);
+subplot(122);
+% show the one after convolution
+imshow(im4,[0 256]);
+
+%from up to down
+fname = sprintf('01.gif',imnum);
+im = imread(fname,'gif');
+
+m = [0 0 5 0 0;
+ 0 0 5 0 0;
+ 0 0 2 0 0;
+ 0 0 5 0 0;
+ 0 0 5 0 0];
+figure
+% normalized matrix
+m = m/sum(m(:));
+im4 = conv2(double(im),m,'same');
+subplot(121);
+% show original image
+imshow(im,[0 256]); 
+subplot(122);
+% show the one after convolution
+imshow(im4,[0 256]);
+
+%%Open Ended Problems
+% Removing "Camera Shake" Blur
+
+m = [2 1 0 0 0;
+     1 2 1 0 0;
+     0 1 2 1 0;
+     0 0 1 2 1;
+     0 0 0 1 2];
+
+% Finding the determinant of the matrix m
+l= det(m); 
+l= l/sum(l(:));
+m = m/sum(m(:));
+
+im2 = conv2(double(im),m,'same');
+im3= conv2(double(im),l, 'same');
+
+figure 
+subplot(1,3,1)
+imshow(im,[0 256])
+title('Image without changes')
+
+subplot(1,3,2)
+imshow(im2,[0 256])
+title('Image with shake blur')
+
+subplot(1,3,3)
+imshow(im3, [0 256])
+title('Image with shake blur removed')
+##### SOURCE END #####
+--></body></html>

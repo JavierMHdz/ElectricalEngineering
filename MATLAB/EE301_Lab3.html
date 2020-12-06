@@ -1,0 +1,217 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>EE301 Lab3</title><meta name="generator" content="MATLAB 8.2"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-02-09"><meta name="DC.source" content="EE301_Lab3.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>EE301 Lab3</h1><p>Javier Macossay-Hernandez, USC ID 9907093913, Lab Section 30813</p><pre class="codeinput"><span class="comment">% Demonstration of music convolved with various impulse responses.</span>
+<span class="comment">% R Kozick modified by Satsuki Takahashi</span>
+fs = 44100; <span class="comment">% Sampling freq, in Hz</span>
+T = 1/fs;
+fc = 500; <span class="comment">% Desired cutoff freq, in Hz</span>
+wc = 2*pi*fc;
+
+<span class="comment">% Make impulse response length equal to 2.30259 time constants</span>
+t = 0:T:(2.30259/wc);
+g = wc*T*exp(-t*wc);
+
+<span class="comment">% Read the original audio sample</span>
+f = wavread(<span class="string">'IMDR1.wav'</span>);
+
+fprintf(<span class="string">'This is the original music . . . '</span>);
+sound(f,44100)
+pause(16)
+
+figure(1)
+plot(t, g);
+title(<span class="string">'Impulse response g(t)'</span>);
+xlabel(<span class="string">'Time (sec.)'</span>);
+ylabel(<span class="string">'Amplitude'</span>);
+
+fprintf(<span class="string">'\nComputing -- please wait . . . '</span>);
+y = conv(f(:,1), g);
+fprintf(<span class="string">'\nThis is after convolution with g(t) . . . '</span>);
+sound(y,44100);
+pause(16)
+
+fprintf(<span class="string">'\nComputing -- please wait . . . '</span>);
+h = [g, zeros(size(0:T:1)), .5*g];
+
+figure(2)
+th = (1:length(h))*T;
+plot(th, h)
+title(<span class="string">'Impulse response h(t)'</span>);
+xlabel(<span class="string">'Time (sec.)'</span>);
+ylabel(<span class="string">'Amplitude'</span>);
+
+z = conv(f(:,1), h);
+fprintf(<span class="string">'\nThis is after convolution with h(t) . . . '</span>);
+sound(z,44100);
+fprintf(<span class="string">'\n'</span>);
+
+fprintf(<span class="string">'To repeat the sounds:\n'</span>)
+fprintf(<span class="string">'sound(f,44100) is the original\n'</span>)
+fprintf(<span class="string">'sound(y,44100) is convolved with g(t)\n'</span>)
+fprintf(<span class="string">'sound(z,44100) is convolved with h(t)\n'</span>)
+
+<span class="comment">%%Question 4)</span>
+<span class="comment">%The first impulse function g(t) looks like a decaying exponential</span>
+<span class="comment">%function. An acceptable value for the missing time constant value is</span>
+<span class="comment">%2.30259 because at that specific value of the time constant, 90% of the graph is</span>
+<span class="comment">%being shown.</span>
+
+<span class="comment">%%Question 5)</span>
+<span class="comment">%The effect of the first convolution with the impulse function g(t)</span>
+<span class="comment">%decreased the amplitude of the signal. Therefore, the volume of audio</span>
+<span class="comment">%sample was decreased.</span>
+
+<span class="comment">%%Question 6)</span>
+<span class="comment">%The effect of the second convolution with the impulse function h(t)</span>
+<span class="comment">%created an echo on the audio sample. A physical mechanism that does the</span>
+<span class="comment">%second peak of h(t) is the bouncing of the wave on a rigid material. A</span>
+<span class="comment">%porous material will absorb the wave and the echo would not be heard.</span>
+</pre><pre class="codeoutput">This is the original music . . . 
+Computing -- please wait . . . 
+This is after convolution with g(t) . . . 
+Computing -- please wait . . . 
+This is after convolution with h(t) . . . 
+To repeat the sounds:
+sound(f,44100) is the original
+sound(y,44100) is convolved with g(t)
+sound(z,44100) is convolved with h(t)
+</pre><img vspace="5" hspace="5" src="EE301_Lab3_01.png" alt=""> <img vspace="5" hspace="5" src="EE301_Lab3_02.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2013b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% EE301 Lab3
+% Javier Macossay-Hernandez,
+% USC ID 9907093913,
+% Lab Section 30813
+
+% Demonstration of music convolved with various impulse responses.
+% R Kozick modified by Satsuki Takahashi
+fs = 44100; % Sampling freq, in Hz
+T = 1/fs;
+fc = 500; % Desired cutoff freq, in Hz
+wc = 2*pi*fc;
+
+% Make impulse response length equal to 2.30259 time constants
+t = 0:T:(2.30259/wc);
+g = wc*T*exp(-t*wc);
+
+% Read the original audio sample
+f = wavread('IMDR1.wav');
+
+fprintf('This is the original music . . . ');
+sound(f,44100)
+pause(16)
+
+figure(1)
+plot(t, g);
+title('Impulse response g(t)');
+xlabel('Time (sec.)');
+ylabel('Amplitude');
+
+fprintf('\nComputing REPLACE_WITH_DASH_DASH please wait . . . ');
+y = conv(f(:,1), g);
+fprintf('\nThis is after convolution with g(t) . . . ');
+sound(y,44100);
+pause(16)
+
+fprintf('\nComputing REPLACE_WITH_DASH_DASH please wait . . . ');
+h = [g, zeros(size(0:T:1)), .5*g];
+
+figure(2)
+th = (1:length(h))*T;
+plot(th, h)
+title('Impulse response h(t)');
+xlabel('Time (sec.)');
+ylabel('Amplitude');
+
+z = conv(f(:,1), h);
+fprintf('\nThis is after convolution with h(t) . . . ');
+sound(z,44100);
+fprintf('\n');
+
+fprintf('To repeat the sounds:\n')
+fprintf('sound(f,44100) is the original\n')
+fprintf('sound(y,44100) is convolved with g(t)\n')
+fprintf('sound(z,44100) is convolved with h(t)\n')
+
+%%Question 4)
+%The first impulse function g(t) looks like a decaying exponential
+%function. An acceptable value for the missing time constant value is
+%2.30259 because at that specific value of the time constant, 90% of the graph is
+%being shown.
+
+%%Question 5)
+%The effect of the first convolution with the impulse function g(t)
+%decreased the amplitude of the signal. Therefore, the volume of audio
+%sample was decreased.
+
+%%Question 6)
+%The effect of the second convolution with the impulse function h(t)
+%created an echo on the audio sample. A physical mechanism that does the
+%second peak of h(t) is the bouncing of the wave on a rigid material. A
+%porous material will absorb the wave and the echo would not be heard.
+##### SOURCE END #####
+--></body></html>
